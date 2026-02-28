@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Daily AI Challenge App — Tech Stack Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1c1c28;
+    --border: rgba(255,255,255,0.07);
+    --accent: #f97316;
+    --accent2: #a855f7;
+    --accent3: #22d3ee;
+    --text: #f1f0f5;
+    --muted: #7a7a9a;
+    --green: #4ade80;
+    --yellow: #fbbf24;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(249,115,22,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(249,115,22,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 72px 0 48px;
+    text-align: center;
+    position: relative;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(249,115,22,0.12);
+    border: 1px solid rgba(249,115,22,0.3);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 span {
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-title .icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .section-title .line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  section { margin-bottom: 56px; }
+
+  /* STACK DECISION BANNER */
+  .decision-banner {
+    background: linear-gradient(135deg, rgba(249,115,22,0.1), rgba(168,85,247,0.08));
+    border: 1px solid rgba(249,115,22,0.2);
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 56px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .decision-banner::before {
+    content: '⚡';
+    position: absolute;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 80px;
+    opacity: 0.06;
+  }
+
+  .decision-banner h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 11px;
+  }
+
+  .decision-banner p {
+    font-size: 1.05rem;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .decision-banner p strong {
+    color: var(--accent);
+  }
+
+  /* TECH CARDS GRID */
+  .tech-grid {
+    display: grid;
+    gap: 16px;
+  }
+
+  .tech-grid.cols-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .tech-grid.cols-3 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+  .tech-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tech-card:hover {
+    border-color: rgba(249,115,22,0.3);
+    transform: translateY(-2px);
+  }
+
+  .tech-card .tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 100px;
+    margin-bottom: 14px;
+    display: inline-block;
+  }
+
+  .tag-frontend { background: rgba(34,211,238,0.12); color: var(--accent3); border: 1px solid rgba(34,211,238,0.2); }
+  .tag-backend  { background: rgba(168,85,247,0.12); color: var(--accent2); border: 1px solid rgba(168,85,247,0.2); }
+  .tag-db       { background: rgba(74,222,128,0.12); color: var(--green);   border: 1px solid rgba(74,222,128,0.2); }
+  .tag-ai       { background: rgba(249,115,22,0.12); color: var(--accent);  border: 1px solid rgba(249,115,22,0.2); }
+  .tag-auth     { background: rgba(251,191,36,0.12); color: var(--yellow);  border: 1px solid rgba(251,191,36,0.2); }
+  .tag-deploy   { background: rgba(248,113,113,0.12); color: #f87171;        border: 1px solid rgba(248,113,113,0.2); }
+  .tag-optional { background: rgba(100,100,130,0.12); color: var(--muted);  border: 1px solid rgba(100,100,130,0.2); }
+
+  .tech-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .tech-card .subtitle {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .tech-card p {
+    font-size: 0.875rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .tech-card .why {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .tech-card .why strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* ARCHITECTURE DIAGRAM */
+  .arch-diagram {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px;
+    font-family: 'DM Sans', monospace;
+  }
+
+  .arch-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .arch-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .arch-box.highlight { border-color: rgba(249,115,22,0.4); color: var(--accent); }
+  .arch-box.blue      { border-color: rgba(34,211,238,0.3); color: var(--accent3); }
+  .arch-box.purple    { border-color: rgba(168,85,247,0.3); color: var(--accent2); }
+  .arch-box.green     { border-color: rgba(74,222,128,0.3); color: var(--green); }
+  .arch-box.yellow    { border-color: rgba(251,191,36,0.3); color: var(--yellow); }
+
+  .arch-arrow {
+    color: var(--muted);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .arch-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* ROADMAP */
+  .roadmap {
+    display: grid;
+    gap: 12px;
+  }
+
+  .roadmap-item {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 24px;
+  }
+
+  .phase-badge {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .phase-badge.p1 { color: var(--accent); border-color: rgba(249,115,22,0.3); }
+  .phase-badge.p2 { color: var(--accent2); border-color: rgba(168,85,247,0.3); }
+  .phase-badge.p3 { color: var(--accent3); border-color: rgba(34,211,238,0.3); }
+
+  .roadmap-content h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .roadmap-content p {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* COST TABLE */
+  .cost-table {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .cost-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 14px 24px;
+    font-size: 0.875rem;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+  }
+
+  .cost-row:last-child { border-bottom: none; }
+  .cost-row.header { background: var(--surface2); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+  .cost-row .free  { color: var(--green); font-weight: 600; }
+
+  /* SUMMARY BOX */
+  .summary-box {
+    background: linear-gradient(135deg, rgba(249,115,22,0.08), rgba(168,85,247,0.06));
+    border: 1px solid rgba(249,115,22,0.2);
+    border-radius: 20px;
+    padding: 36px;
+  }
+
+  .summary-box h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+  }
+
+  .stack-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 8px 18px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .chip span { font-size: 1rem; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .tech-card, .roadmap-item {
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .note {
+    background: rgba(251,191,36,0.08);
+    border-left: 3px solid var(--yellow);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 18px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 16px;
+  }
+
+  .note strong { color: var(--yellow); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">🚀 Startup Tech Stack Guide</div>
+    <h1>Daily AI Challenge App<br/><span>Complete Tech Blueprint</span></h1>
+    <p>A production-ready, scalable technology stack chosen for speed, cost-efficiency, and developer experience.</p>
+  </div>
+
+  <!-- DECISION BANNER -->
+  <div class="decision-banner">
+    <h2>📌 My Recommendation</h2>
+    <p>Build this as a <strong>full-stack JavaScript/TypeScript app</strong> using <strong>Next.js 14</strong> (frontend + API), <strong>Supabase</strong> (database + auth + storage), and <strong>OpenAI GPT-4o-mini</strong> for AI challenges. This stack lets a solo developer or small team ship fast, scale cheaply, and maintain easily — all on a near-zero starting cost.</p>
+  </div>
+
+  <!-- FRONTEND -->
+  <section>
+    <div class="section-title">
+      <div class="icon" style="background:rgba(34,211,238,0.1);">🎨</div>
+      Frontend Stack
+      <div class="line"></div>
+    </div>
+    <div class="tech-grid cols-2">
+
+      <div class="tech-card">
+        <span class="tag tag-frontend">Framework</span>
+        <h3>Next.js 14 (App Router)</h3>
+        <div class="subtitle">React framework with SSR + SSG</div>
+        <p>Handles routing, server-side rendering, API routes, and static generation all in one. Perfect for a dashboard app with protected routes.</p>
+        <div class="why"><strong>Why:</strong> Full-stack in one repo. No separate backend server needed. Huge ecosystem. Easy deployment on Vercel.</div>
+      </div>
+
+      <div class="tech-card">
+        <span class="tag tag-frontend">Language</span>
+        <h3>TypeScript</h3>
+        <div class="subtitle">Typed JavaScript</div>
+        <p>Catch bugs before runtime, better IDE autocomplete, and makes the codebase scalable as the team grows.</p>
+        <div class="why"><strong>Why:</strong> As features grow (badges, leaderboard), types prevent breaking changes. Industry standard for serious projects.</div>
+      </div>
+
+      <div class="tech-card">
+        <span class="tag tag-frontend">Styling</span>
+        <h3>Tailwind CSS + shadcn/ui</h3>
+        <div class="subtitle">Utility-first CSS + headless components</div>
+        <p>Tailwind for rapid UI development, shadcn/ui for pre-built accessible components like dialogs, dropdowns, toggles — fully customizable.</p>
+        <div class="why"><strong>Why:</strong> Build the entire UI in hours, not days. Dark mode built-in. Gamified designs look sharp with utility classes.</div>
+      </div>
+
+      <div class="tech-card">
+        <span class="tag tag-frontend">Animations</span>
+        <h3>Framer Motion</h3>
+        <div class="subtitle">Production animation library for React</div>
+        <p>Powers the streak celebration, page transitions, challenge card reveals, and XP counters. Declarative and performant.</p>
+        <div class="why"><strong>Why:</strong> The gamified feel lives or dies on animations. Framer Motion makes this effortless without performance cost.</div>
+      </div>
+
+      <div class="tech-card">
+        <span class="tag tag-frontend">State</span>
+        <h3>Zustand + React Query</h3>
+        <div class="subtitle">Lightweight state + server state management</div>
+        <p>Zustand for UI state (theme, modal open/close). React Query (TanStack) for server data — caching, refetching, loading states.</p>
+        <div class="why"><strong>Why:</strong> Together they cover 100% of state needs with minimal boilerplate. Much lighter than Redux.</div>
+      </div>
+
+      <div class="tech-card">
+        <span class="tag tag-frontend">Forms</span>
+        <h3>React Hook Form + Zod</h3>
+        <div class="subtitle">Form management + schema validation</div>
+        <p>For signup, login, onboarding preference forms. Zod defines schemas used on both client and server for validation consistency.</p>
+        <div class="why"><strong>Why:</strong> Auth and onboarding are form-heavy. This combo eliminates bugs from form validation mismatches.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- BACKEND -->
+  <section>
+    <div class="section-title">
+      <div class="icon" style="background:rgba(168,85,247,0.1);">⚙️</div>
+      Backend Stack
+      <div class="line"></div>
+    </div>
+    <div class="tech-grid cols-2">
+
+      <div class="tech-card">
+        <span class="tag tag-backend">API Layer</span>
+        <h3>Next.js API Routes (or tRPC)</h3>
+        <div class="subtitle">Server-side logic in the same repo</div>
+        <p>All business logic lives in /app/api — challenge generation, streak logic, XP system, restore logic. Zero config needed.</p>
+        <div class="why"><strong>Why:</strong> No separate Express/Node server. Deploy everything on Vercel. Use tRPC for end-to-end type safety if the team grows.</div>
+      </div>
+
+      <div class="tech-card">
+        <span class="tag tag-backend">Runtime</span>
+        <h3>Node.js (via Vercel Edge)</h3>
+        <div class="subtitle">JavaScript runtime with edge functions</div>
+        <p>Vercel's edge runtime runs your API routes globally close to users — fast cold starts, low latency for real-time streak checks.</p>
+        <div class="why"><strong>Why:</strong> Free tier is extremely generous. Global CDN means users in India, US, or Europe all get fast responses.</div>
+      </div>
+
+      <div class="tech-card">
+        <span class="tag tag-backend">Cron Jobs</span>
+        <h3>Vercel Cron Jobs</h3>
+        <div class="subtitle">Scheduled tasks for daily logic</div>
+        <p>Run a daily cron job to: check missed streaks, pre-generate challenges for tomorrow, send push notifications (future feature).</p>
+        <div class="why"><strong>Why:</strong> Native to Vercel. No extra infra like Celery or Redis queues needed for MVP.</div>
+      </div>
+
+      <div class="tech-card">
+        <span class="tag tag-ai">AI Engine</span>
+        <h3>OpenAI GPT-4o-mini</h3>
+        <div class="subtitle">AI challenge generation</div>
+        <p>Send user preferences (categories, difficulty, outdoor toggle) as a structured prompt. Get back a personalized challenge in JSON. Cache result per user per day to avoid repeat API calls.</p>
+        <div class="why"><strong>Why:</strong> GPT-4o-mini is 95% cheaper than GPT-4o, faster, and more than capable for single-sentence challenge generation. ~$0.0001 per challenge.</div>
+      </div>
+
+    </div>
+
+    <div class="note">
+      <strong>💡 AI Prompt Strategy:</strong> Pass the user's interests, difficulty, outdoor preference, and last 7 challenge topics (to avoid repetition) into a structured system prompt. Ask GPT to return JSON with: <code>{ title, description, xp_reward, category, estimated_time }</code>. Store the result in DB so it's generated once and served all day.
+    </div>
+  </section>
+
+  <!-- DATABASE & AUTH -->
+  <section>
+    <div class="section-title">
+      <div class="icon" style="background:rgba(74,222,128,0.1);">🗄️</div>
+      Database, Auth & Storage
+      <div class="line"></div>
+    </div>
+    <div class="tech-grid cols-3">
+
+      <div class="tech-card">
+        <span class="tag tag-db">Database</span>
+        <h3>Supabase (PostgreSQL)</h3>
+        <div class="subtitle">Managed Postgres + realtime</div>
+        <p>PostgreSQL database managed by Supabase. Store users, challenges, streaks, XP, history. Row-level security built-in.</p>
+        <div class="why"><strong>Why:</strong> Free tier covers 500MB + 2 projects. SQL is perfect for relational streak/XP logic.</div>
+      </div>
+
+      <div class="tech-card">
+        <span class="tag tag-auth">Auth</span>
+        <h3>Supabase Auth</h3>
+        <div class="subtitle">Email + OAuth + JWT sessions</div>
+        <p>Handles signup, login, logout, session tokens, password reset. Integrates with Google OAuth for social login later.</p>
+        <div class="why"><strong>Why:</strong> Free, already bundled with Supabase. No need for separate Auth0 or Clerk on MVP.</div>
+      </div>
+
+      <div class="tech-card">
+        <span class="tag tag-db">Storage</span>
+        <h3>Supabase Storage</h3>
+        <div class="subtitle">File/image upload hosting</div>
+        <p>Stores proof photos that users upload when completing challenges. Returns a public URL stored in the challenge completion record.</p>
+        <div class="why"><strong>Why:</strong> 1GB free tier. Direct upload from browser. No S3 config needed on MVP.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DATA SCHEMA -->
+  <section>
+    <div class="section-title">
+      <div class="icon" style="background:rgba(249,115,22,0.1);">🧱</div>
+      Core Database Tables
+      <div class="line"></div>
+    </div>
+    <div class="arch-diagram" style="font-family: 'DM Sans', sans-serif;">
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:16px;">
+
+        <div>
+          <div style="font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;">users</div>
+          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px; font-size:0.78rem; line-height:2;">
+            id (uuid)<br/>
+            email<br/>
+            name<br/>
+            <span style="color:var(--yellow)">categories (array)</span><br/>
+            <span style="color:var(--yellow)">difficulty</span><br/>
+            <span style="color:var(--yellow)">allow_outdoor (bool)</span><br/>
+            <span style="color:var(--accent)">current_streak</span><br/>
+            <span style="color:var(--accent)">best_streak</span><br/>
+            <span style="color:var(--green)">total_xp</span><br/>
+            theme_preference<br/>
+            created_at
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;">daily_challenges</div>
+          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px; font-size:0.78rem; line-height:2;">
+            id (uuid)<br/>
+            user_id (FK)<br/>
+            <span style="color:var(--accent3)">challenge_date (date)</span><br/>
+            title<br/>
+            description<br/>
+            category<br/>
+            difficulty<br/>
+            <span style="color:var(--green)">xp_reward</span><br/>
+            <span style="color:var(--accent)">is_completed (bool)</span><br/>
+            completed_at<br/>
+            proof_url<br/>
+            generated_by_ai
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;">streak_restores</div>
+          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px; font-size:0.78rem; line-height:2;">
+            id (uuid)<br/>
+            user_id (FK)<br/>
+            <span style="color:var(--accent)">xp_spent</span><br/>
+            <span style="color:var(--accent3)">missed_date (date)</span><br/>
+            <span style="color:var(--accent3)">restored_at (timestamp)</span><br/>
+            is_within_window
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ARCHITECTURE FLOW -->
+  <section>
+    <div class="section-title">
+      <div class="icon" style="background:rgba(34,211,238,0.1);">🔄</div>
+      Request Architecture Flow
+      <div class="line"></div>
+    </div>
+    <div class="arch-diagram">
+
+      <div class="arch-row">
+        <div class="arch-box blue">User Browser</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box highlight">Next.js App (Vercel)</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box purple">Supabase Auth</div>
+        <div class="arch-label">Session check</div>
+      </div>
+
+      <div class="arch-row" style="margin-left:48px;">
+        <div class="arch-box highlight">API Route: /api/challenge/today</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box green">Supabase DB</div>
+        <div class="arch-label">Check if challenge exists for today</div>
+      </div>
+
+      <div class="arch-row" style="margin-left:96px;">
+        <div style="font-size:0.75rem; color:var(--muted); padding:0 8px;">If not found →</div>
+        <div class="arch-box yellow">OpenAI GPT-4o-mini</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box green">Save to DB</div>
+        <div class="arch-label">Generate + cache</div>
+      </div>
+
+      <div class="arch-row" style="margin-left:48px; margin-top:8px;">
+        <div class="arch-box highlight">API Route: /api/challenge/complete</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box green">Update streak + XP</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box blue">Return celebration</div>
+      </div>
+
+      <div class="arch-row" style="margin-left:0; margin-top:8px;">
+        <div class="arch-box" style="border-color:rgba(251,191,36,0.3); color:var(--yellow)">Vercel Cron (Daily)</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box green">Check missed streaks</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box green">Update DB</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DEPLOYMENT -->
+  <section>
+    <div class="section-title">
+      <div class="icon" style="background:rgba(248,113,113,0.1);">🚀</div>
+      Deployment Stack
+      <div class="line"></div>
+    </div>
+    <div class="tech-grid cols-3">
+
+      <div class="tech-card">
+        <span class="tag tag-deploy">Hosting</span>
+        <h3>Vercel</h3>
+        <div class="subtitle">Frontend + API deployment</div>
+        <p>Git push to deploy. Auto HTTPS, global CDN, serverless functions, cron jobs, preview deployments per PR. Free tier is production-grade.</p>
+      </div>
+
+      <div class="tech-card">
+        <span class="tag tag-deploy">CI/CD</span>
+        <h3>GitHub + Vercel</h3>
+        <div class="subtitle">Automatic deployments</div>
+        <p>Push to main → production. Push to feature branch → preview URL. No manual deployment pipeline needed.</p>
+      </div>
+
+      <div class="tech-card">
+        <span class="tag tag-optional">Monitoring</span>
+        <h3>Sentry + Vercel Analytics</h3>
+        <div class="subtitle">Error tracking + usage metrics</div>
+        <p>Sentry catches runtime errors. Vercel Analytics shows real user traffic, Web Vitals scores, and page views. Both have free tiers.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- COST TABLE -->
+  <section>
+    <div class="section-title">
+      <div class="icon" style="background:rgba(74,222,128,0.1);">💰</div>
+      Cost at MVP Stage (0–1000 users)
+      <div class="line"></div>
+    </div>
+    <div class="cost-table">
+      <div class="cost-row header">
+        <div>Service</div>
+        <div>Plan</div>
+        <div>Monthly Cost</div>
+      </div>
+      <div class="cost-row"><div>Vercel</div><div>Hobby (free)</div><div class="free">$0</div></div>
+      <div class="cost-row"><div>Supabase (DB + Auth + Storage)</div><div>Free tier</div><div class="free">$0</div></div>
+      <div class="cost-row"><div>OpenAI GPT-4o-mini</div><div>Pay per use</div><div style="color:var(--yellow)">~$0.10–$5</div></div>
+      <div class="cost-row"><div>Sentry</div><div>Developer (free)</div><div class="free">$0</div></div>
+      <div class="cost-row"><div>Domain</div><div>Namecheap / Cloudflare</div><div style="color:var(--yellow)">~$1/mo</div></div>
+      <div class="cost-row" style="background:rgba(74,222,128,0.05)"><div><strong>Total</strong></div><div></div><div style="color:var(--green); font-weight:700">~$1–6 / month</div></div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section>
+    <div class="section-title">
+      <div class="icon" style="background:rgba(168,85,247,0.1);">📅</div>
+      Build Phases
+      <div class="line"></div>
+    </div>
+    <div class="roadmap">
+
+      <div class="roadmap-item">
+        <div class="phase-badge p1">Phase 1<br/>Week 1–2</div>
+        <div class="roadmap-content">
+          <h4>Core MVP</h4>
+          <p>Supabase setup (DB schema + auth), Next.js project with Tailwind, Auth pages (signup/login), Onboarding flow, Dashboard with static/mock challenge, Complete button + streak counter.</p>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="phase-badge p1">Phase 2<br/>Week 3</div>
+        <div class="roadmap-content">
+          <h4>AI Integration + Real Logic</h4>
+          <p>OpenAI integration for challenge generation, Daily cron job for streak checking, XP system logic, Streak restore feature (24h window), History page, Dark/Light mode toggle.</p>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="phase-badge p2">Phase 3<br/>Week 4</div>
+        <div class="roadmap-content">
+          <h4>Polish + Engagement</h4>
+          <p>Framer Motion celebration animations, Proof photo upload (Supabase Storage), Profile page, Best streak display, UI polish, Mobile responsiveness audit.</p>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <div class="phase-badge p3">Phase 4<br/>Post-launch</div>
+        <div class="roadmap-content">
+          <h4>Growth Features</h4>
+          <p>Badges system, Levels (XP thresholds), Leaderboard (Supabase realtime), Push notifications (Web Push API), Social sharing of streaks, Referral system.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ALTERNATIVES -->
+  <section>
+    <div class="section-title">
+      <div class="icon" style="background:rgba(100,100,130,0.1);">🔀</div>
+      When to Switch (Alternative Paths)
+      <div class="line"></div>
+    </div>
+    <div class="tech-grid cols-2">
+
+      <div class="tech-card">
+        <span class="tag tag-optional">Alternative</span>
+        <h3>If you prefer Python backend</h3>
+        <p>Use <strong>FastAPI</strong> (Python) for backend + <strong>React + Vite</strong> for frontend. Host FastAPI on <strong>Railway</strong> or <strong>Render</strong>. Keep Supabase for DB. Good if you're already strong in Python/ML.</p>
+      </div>
+
+      <div class="tech-card">
+        <span class="tag tag-optional">Alternative</span>
+        <h3>If you want mobile (React Native)</h3>
+        <p>Use <strong>Expo (React Native)</strong> for iOS + Android. Same Next.js API backend works perfectly. Add <strong>Expo Notifications</strong> for push. Use the same Supabase database.</p>
+      </div>
+
+      <div class="tech-card">
+        <span class="tag tag-optional">Alternative</span>
+        <h3>If you use Firebase ecosystem</h3>
+        <p>Replace Supabase with <strong>Firebase (Firestore + Auth + Storage)</strong>. Still use Next.js frontend. Firestore is NoSQL so streak logic gets slightly trickier, but works fine.</p>
+      </div>
+
+      <div class="tech-card">
+        <span class="tag tag-optional">Alternative</span>
+        <h3>If scale becomes massive (&gt;100K users)</h3>
+        <p>Add <strong>Redis</strong> (Upstash) for caching today's challenges per user. Add <strong>BullMQ</strong> job queues for AI generation. Move to <strong>Neon</strong> serverless Postgres for better connection pooling.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FINAL SUMMARY -->
+  <div class="summary-box">
+    <h3>🏆 Recommended Stack — Final Summary</h3>
+    <div class="stack-chips">
+      <div class="chip"><span>⚛️</span> Next.js 14</div>
+      <div class="chip"><span>🔷</span> TypeScript</div>
+      <div class="chip"><span>🎨</span> Tailwind CSS</div>
+      <div class="chip"><span>🧩</span> shadcn/ui</div>
+      <div class="chip"><span>🎬</span> Framer Motion</div>
+      <div class="chip"><span>🐻</span> Zustand</div>
+      <div class="chip"><span>🔄</span> React Query</div>
+      <div class="chip"><span>🟢</span> Supabase</div>
+      <div class="chip"><span>🤖</span> OpenAI GPT-4o-mini</div>
+      <div class="chip"><span>▲</span> Vercel</div>
+      <div class="chip"><span>🐙</span> GitHub</div>
+      <div class="chip"><span>🔐</span> Zod</div>
+    </div>
+    <div style="margin-top:24px; padding-top:24px; border-top:1px solid var(--border); font-size:0.875rem; color:var(--muted); line-height:1.8;">
+      This stack gives you: <strong style="color:var(--text)">fast development velocity</strong>, <strong style="color:var(--text)">near-zero infra cost</strong> at MVP stage, <strong style="color:var(--text)">TypeScript safety</strong> across the whole app, <strong style="color:var(--text)">scalable architecture</strong> that grows with your user base, and a <strong style="color:var(--text)">great developer experience</strong> that doesn't burn you out before launch.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Category {
+  Fitness
+  Productivity
+  Learning
+  Fun
+  Social
+}
+
+enum Difficulty {
+  Easy
+  Medium
+  Hard
+}
+
+enum DayStatus {
+  assigned
+  completed
+  missed
+  restored
+}
+
+model User {
+  id                 String            @id @default(cuid())
+  name               String
+  email              String            @unique
+  passwordHash       String
+  createdAt          DateTime          @default(now())
+  onboardingComplete Boolean           @default(false)
+  xp                 Int               @default(0)
+  difficulty         Difficulty?
+  allowOutdoor       Boolean           @default(true)
+  categories         UserCategory[]
+  streak             Streak?
+  history            ChallengeRecord[]
+  sessions           Session[]
+}
+
+model UserCategory {
+  id       String   @id @default(cuid())
+  userId   String
+  category Category
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, category])
+  @@index([userId])
+}
+
+model Streak {
+  id                      String    @id @default(cuid())
+  userId                  String    @unique
+  current                 Int       @default(0)
+  best                    Int       @default(0)
+  lastCompletedDateKey    String?
+  frozenBeforeMiss        Int?
+  restorableMissedDateKey String?
+  restoreDeadline         DateTime?
+  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ChallengeRecord {
+  id           String     @id @default(cuid())
+  userId       String
+  dateKey      String
+  challengeId  String
+  challengeText String
+  category     Category
+  difficulty   Difficulty
+  outdoor      Boolean
+  status       DayStatus
+  xpEarned     Int        @default(0)
+  proofNote    String?
+  completedAt  DateTime?
+  createdAt    DateTime   @default(now())
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, dateKey])
+  @@index([userId, dateKey])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
